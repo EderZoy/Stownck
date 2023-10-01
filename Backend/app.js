@@ -1,6 +1,16 @@
 const express = require("express");
-const sequelize = require("./db");
-const tipoProductoRoutes = require("./routes/tipoProductoRoutes");
+const sequelize = require("./src/config/db");
+const tipoProductoRoutes = require("./src/routers/tipoProductoRoutes");
+const usuarioRoutes = require("./src/routers/usuarioRoutes");
+const proveedorRoutes = require("./src/routers/proveedorRoutes");
+const formaPagoRoutes = require("./src/routers/formaPagoRoutes");
+const productoRoutes = require("./src/routers/productoRoutes");
+const compraRoutes = require("./src/routers/compraRoutes");
+const productoCompraRoutes = require("./src/routers/productoCompraRoutes");
+const productoVentaRoutes = require("./src/routers/productoVentaRoutes");
+const ventaRoutes = require("./src/routers/ventaRoutes");
+const productoCambioRoutes = require("./src/routers/productoCambioRoutes");
+const cambioMasivoRoutes = require("./src/routers/cambioMasivoRoutes");
 
 const app = express();
 
@@ -17,7 +27,16 @@ sequelize
 // Configuracion de middleware y rutas.
 app.use(express.json());
 app.use("/api", tipoProductoRoutes);
-// Agregar más rutas para las demás entidades.
+app.use("/api", usuarioRoutes);
+app.use("/api", proveedorRoutes);
+app.use("/api", formaPagoRoutes);
+app.use("/api", productoRoutes);
+app.use("/api", compraRoutes);
+app.use("/api", ventaRoutes);
+app.use("/api", cambioMasivoRoutes);
+app.use("/api", productoCompraRoutes);
+app.use("/api", productoVentaRoutes);
+app.use("/api", productoCambioRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

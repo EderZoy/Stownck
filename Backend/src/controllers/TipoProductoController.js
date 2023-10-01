@@ -58,7 +58,6 @@ const updateTipoProducto = async (req, res) => {
 };
 
 // Eliminar
-const { TipoProducto } = require("../models");
 
 const deleteTipoProducto = async (req, res) => {
   const { id } = req.params;
