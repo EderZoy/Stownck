@@ -9,5 +9,6 @@ router.get("/usuario", UsuarioController.getAllUsuarios);
 router.get("/usuario/:id", UsuarioController.getUsuarioById);
 router.put("/usuario/update/:id", UsuarioController.updateUsuario);
 router.delete("/usuario/delete/:id", UsuarioController.deleteUsuario);
+router.post("/usuario/validar-usuario", UsuarioController.validarUsuario);
 
 module.exports = router;

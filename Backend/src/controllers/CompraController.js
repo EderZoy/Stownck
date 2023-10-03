@@ -2,6 +2,7 @@ const ProductoCompra = require("../models/ProductoCompra");
 const Proveedor = require("../models/Proveedor");
 const Usuario = require("../models/Usuario");
 const Compra = require("../models/Compra");
+const Producto = require("../models/Producto");
 
 const createCompra = async (req, res) => {
   try {
@@ -15,13 +16,25 @@ const createCompra = async (req, res) => {
 const getAllCompras = async (req, res) => {
   try {
     const compras = await Compra.findAll({
-      include: [
-        { model: [ProductoCompra], include: Producto },
-        { model: Proveedor },
-        { model: Usuario },
-      ],
+      include: [{ model: Proveedor }, { model: Usuario }],
     });
-    return res.status(200).json(compras);
+
+    // Obtener los detalles de ProductoCompra para cada compra
+    const comprasConDetalles = await Promise.all(
+      compras.map(async (compra) => {
+        const detalles = await ProductoCompra.findAll({
+          where: { compraId: compra.id },
+          include: [Producto],
+        });
+
+        return {
+          ...compra.toJSON(),
+          detallesProductoCompra: detalles,
+        };
+      })
+    );
+
+    return res.status(200).json(comprasConDetalles);
   } catch (error) {
     return res.status(500).json({ error: "Error al obtener las compras" });
   }

@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const sequelize = require("./src/config/db");
 const tipoProductoRoutes = require("./src/routers/tipoProductoRoutes");
 const usuarioRoutes = require("./src/routers/usuarioRoutes");
@@ -13,6 +14,8 @@ const productoCambioRoutes = require("./src/routers/productoCambioRoutes");
 const cambioMasivoRoutes = require("./src/routers/cambioMasivoRoutes");
 
 const app = express();
+// Configurar CORS
+app.use(cors());
 
 // Sincronizacion de Sequelize con la base de datos.
 sequelize

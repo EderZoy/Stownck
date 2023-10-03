@@ -64,6 +64,24 @@ const deleteUsuario = async (req, res) => {
   }
 };
 
+// Validar usuario para que login
+const validarUsuario = async (req, res) => {
+  const { nombre, contraseña } = req.body;
+
+  try {
+    const usuario = await Usuario.findOne({ where: { nombre, contraseña } });
+
+    if (usuario) {
+      res.status(200).json({ mensaje: "Usuario válido" });
+    } else {
+      res.status(401).json({ mensaje: "Usuario inválido" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error al validar el usuario" });
+  }
+};
+
 // exportamos
 
 module.exports = {
@@ -72,4 +90,5 @@ module.exports = {
   getUsuarioById,
   updateUsuario,
   deleteUsuario,
+  validarUsuario,
 };
