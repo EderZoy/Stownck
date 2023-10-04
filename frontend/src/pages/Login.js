@@ -3,6 +3,11 @@ import backgroundImage from "../images/fononegro.png"; // Ruta a tu imagen de fo
 import logo from "../images/logo.png";
 import authenticate from "../service/RequestUsuario";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../components/UserContext";
+
+export const obtenerUsuario = () => {
+  return LoginScreen.obtenerUsuario();
+};
 
 const LoginScreen = () => {
   const [nombre, setUsername] = useState("");
@@ -10,6 +15,12 @@ const LoginScreen = () => {
   const [error, setError] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
   const navigate = useNavigate();
+  const { updateUser } = useUser();
+
+  // eslint-disable-next-line no-unused-vars
+  const obtenerUsuario = () => {
+    return nombre;
+  };
 
   const handleTogglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -40,6 +51,7 @@ const LoginScreen = () => {
         // Usuario autenticado, realizar acciones necesarias (por ejemplo, redireccionar a otra página)
         console.log("Usuario autenticado");
         // Redirigir al usuario a la página de dashboard
+        updateUser(nombre);
         navigate("/principal");
       } else {
         setError("Nombre de usuario o contraseña incorrectos.");
