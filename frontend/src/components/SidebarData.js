@@ -28,7 +28,7 @@ export const SidebarData = [
   },
   {
     titulo: "Tipo de Producto",
-    path: "/tipoproductos",
+    path: "/consultar-tiposproductos",
     icono: <PiIcons.PiCoatHangerBold />,
     cName:
       "text-decoration-none text-black text-xl w-95 h-12 flex items-center px-4 rounded hover:bg-[#7BBBB7]",
@@ -49,7 +49,7 @@ export const SidebarData = [
   },
   {
     titulo: "Cerrar sesión",
-    path: "/login",
+    path: "/logout",
     icono: <BsIcons.BsBoxArrowLeft />,
     cName:
       "text-decoration-none text-black text-xl w-95 h-12 flex items-center px-4 rounded hover:bg-[#FF4444] mt-60",

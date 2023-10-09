@@ -1,6 +1,8 @@
 // controllers/TipoProductoController.js
 const TipoProducto = require("../models/TipoProducto");
 
+const ITEMS_PER_PAGE = 7; // Establece el número de elementos por página
+
 // crear
 const createTipoProducto = async (req, res) => {
   try {
@@ -16,8 +18,19 @@ const createTipoProducto = async (req, res) => {
 // Obtener
 const getAllTipoProductos = async (req, res) => {
   try {
-    const tipoProductos = await TipoProducto.findAll();
-    return res.status(200).json(tipoProductos);
+    const page = parseInt(req.query.page) || 1;
+    const offset = (page - 1) * ITEMS_PER_PAGE;
+
+    const tipoProductos = await TipoProducto.findAndCountAll({
+      limit: ITEMS_PER_PAGE,
+      offset,
+    });
+
+    return res.status(200).json({
+      tipoProductos: tipoProductos.rows,
+      currentPage: page,
+      totalPages: Math.ceil(tipoProductos.count / ITEMS_PER_PAGE),
+    });
   } catch (error) {
     return res
       .status(500)

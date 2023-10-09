@@ -5,13 +5,23 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import { UserProvider } from "./components/UserContext";
+import Modal from "react-modal";
+import { AuthProvider } from "./context/AuthProvider";
+
+// Define el elemento raíz (puede ser cualquier elemento, por ejemplo, un div)
+const rootElement = document.getElementById("root");
+
+// Establece el elemento raíz para React Modal
+Modal.setAppElement(rootElement);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
       <UserProvider>
-        <App />
+        <AuthProvider>
+          <App />
+        </AuthProvider>
       </UserProvider>
     </BrowserRouter>
   </React.StrictMode>

@@ -1,8 +1,8 @@
-const routeBase = "http://192.168.0.195:3000";
+import config from "./config";
 
 const authenticate = async (nombre, contraseña) => {
   try {
-    const response = await fetch(routeBase + "/api/usuario/validar-usuario", {
+    const response = await fetch(`${config.routeBase}/auth/login`, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -15,14 +15,18 @@ const authenticate = async (nombre, contraseña) => {
     });
 
     if (!response.ok) {
-      throw new Error("Network response was not ok");
+      const errorResponse = await response.json();
+      throw new Error(errorResponse.error || "Error en la autenticación");
     }
 
-    const responseData = await response.status; // Parseamos la respuesta como JSON
+    const responseData = await response.json();
+    console.log(responseData.token);
 
-    console.log(JSON.stringify(responseData));
+    localStorage.setItem("token", responseData.token);
 
-    return responseData; // Retornamos la respuesta del servidor
+    const responseS = await response.status; // Parseamos la respuesta como JSON
+
+    return responseS;
   } catch (error) {
     console.error(error);
     throw error;

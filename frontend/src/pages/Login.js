@@ -4,6 +4,7 @@ import logo from "../images/logo.png";
 import authenticate from "../service/RequestUsuario";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../components/UserContext";
+import { useAuth } from "../context/AuthProvider";
 
 export const obtenerUsuario = () => {
   return LoginScreen.obtenerUsuario();
@@ -16,6 +17,7 @@ const LoginScreen = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const navigate = useNavigate();
   const { updateUser } = useUser();
+  const { login } = useAuth(); // Usa el contexto de autenticación
 
   // eslint-disable-next-line no-unused-vars
   const obtenerUsuario = () => {
@@ -45,11 +47,12 @@ const LoginScreen = () => {
     try {
       const response = await authenticate(nombre, contraseña);
       console.log(response);
-
       // Verificar la respuesta del servidor
       if (response === 200) {
+        login(localStorage.getItem("token"));
         // Usuario autenticado, realizar acciones necesarias (por ejemplo, redireccionar a otra página)
         console.log("Usuario autenticado");
+
         // Redirigir al usuario a la página de dashboard
         updateUser(nombre);
         navigate("/principal");

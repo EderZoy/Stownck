@@ -44,7 +44,7 @@ const NavBar = () => {
         <Link to="#" className="">
           <FaIcons.FaBars onClick={showSidebar} className="text-2xl" />
         </Link>
-        <div className="text-2xl font-bold text-center items-center">
+        <div className="text-2xl font-bold text-center items-center ml-48">
           STOWNCK
         </div>
         <div className="flex flex-col items-end">
