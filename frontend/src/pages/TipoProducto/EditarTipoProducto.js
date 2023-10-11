@@ -1,8 +1,8 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import obtenerTipoProductoPorId from "../../service/RequestGetTipoProductoId";
-import actualizarTipoProducto from "../../service/RequestPutTipoProducto";
+import obtenerTipoProductoPorId from "../../service/RequestTipoProducto/RequestGetTipoProductoId";
+import actualizarTipoProducto from "../../service/RequestTipoProducto/RequestPutTipoProducto";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 

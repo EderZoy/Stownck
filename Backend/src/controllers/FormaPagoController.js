@@ -1,5 +1,7 @@
 const FormaPago = require("../models/FormaPago");
 
+const ITEMS_PER_PAGE = 7; // Establece el número de elementos por página
+
 // Crear
 const createFormaPago = async (req, res) => {
   try {
@@ -13,8 +15,19 @@ const createFormaPago = async (req, res) => {
 // Obtener
 const getAllFormasPago = async (req, res) => {
   try {
-    const formasPago = await FormaPago.findAll();
-    return res.status(200).json(formasPago);
+    const page = parseInt(req.query.page) || 1;
+    const offset = (page - 1) * ITEMS_PER_PAGE;
+
+    const formaPagos = await FormaPago.findAndCountAll({
+      limit: ITEMS_PER_PAGE,
+      offset,
+    });
+
+    return res.status(200).json({
+      formaPagos: formaPagos.rows,
+      currentPage: page,
+      totalPages: Math.ceil(formaPagos.count / ITEMS_PER_PAGE),
+    });
   } catch (error) {
     return res.status(500).json({ error: "Error al obtener formas de pago" });
   }

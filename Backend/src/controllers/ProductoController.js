@@ -1,6 +1,8 @@
 const Producto = require("../models/Producto");
 const TipoProducto = require("../models/TipoProducto");
 
+const ITEMS_PER_PAGE = 7; // Establece el número de elementos por página
+
 // Crear
 const createProducto = async (req, res) => {
   try {
@@ -14,10 +16,20 @@ const createProducto = async (req, res) => {
 // Obtener
 const getAllProductos = async (req, res) => {
   try {
-    const productos = await Producto.findAll({
+    const page = parseInt(req.query.page) || 1;
+    const offset = (page - 1) * ITEMS_PER_PAGE;
+
+    const productos = await Producto.findAndCountAll({
+      limit: ITEMS_PER_PAGE,
+      offset,
       include: [TipoProducto], // se incluye la relación con TipoProducto
     });
-    return res.status(200).json(productos);
+
+    return res.status(200).json({
+      productos: productos.rows,
+      currentPage: page,
+      totalPages: Math.ceil(productos.count / ITEMS_PER_PAGE),
+    });
   } catch (error) {
     return res.status(500).json({ error: "Error al obtener los productos" });
   }

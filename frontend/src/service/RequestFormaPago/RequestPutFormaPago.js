@@ -1,9 +1,9 @@
-import config from "./config";
+import config from "../config";
 
-const actualizarTipoProducto = async (id, datos) => {
+const actualizarFormaPago = async (id, datos) => {
   try {
     const response = await fetch(
-      `${config.routeBase}/api/tipo-producto/update/${id}`,
+      `${config.routeBase}/api/forma-pago/update/${id}`,
       {
         method: "PUT",
         headers: {
@@ -15,15 +15,15 @@ const actualizarTipoProducto = async (id, datos) => {
     );
 
     if (!response.ok) {
-      throw new Error("Error al actualizar el tipo de producto");
+      throw new Error("Error al actualizar la forma de pago");
     }
 
-    const tipoProductoActualizado = await response.json();
-    return tipoProductoActualizado;
+    const formaPagoActualizada = await response.json();
+    return formaPagoActualizada;
   } catch (error) {
     console.error(error);
     throw error;
   }
 };
 
-export default actualizarTipoProducto;
+export default actualizarFormaPago;

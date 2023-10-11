@@ -42,7 +42,7 @@ export const SidebarData = [
   },
   {
     titulo: "Formas de Pago",
-    path: "/formaspago",
+    path: "/consultar-formaspago",
     icono: <FaIcons.FaWallet />,
     cName:
       "text-decoration-none text-black text-xl w-95 h-12 flex items-center px-4 rounded hover:bg-[#7BBBB7]",

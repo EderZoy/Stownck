@@ -1,5 +1,5 @@
 // service/RequestCrearTipoProducto.js
-import config from "./config";
+import config from "../config";
 
 const crearTipoProducto = async ({ nombre, descripcion }) => {
   try {

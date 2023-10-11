@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import RequestPostTipoProducto from "../../service/RequestTipoProducto/RequestPostTipoProducto";
+import RequestPostFormaPago from "../../service/RequestFormaPago/RequestPostFormaPago.js";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const AgregarTipoProducto = () => {
+const AgregarFormaPago = () => {
   const [nombre, setNombre] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [error, setError] = useState(null);
@@ -21,11 +21,11 @@ const AgregarTipoProducto = () => {
         return;
       }
 
-      // Enviar solicitud para crear el tipo de producto
-      await RequestPostTipoProducto({ nombre, descripcion });
+      // Enviar solicitud para crear
+      await RequestPostFormaPago({ nombre, descripcion });
 
       // Muestra la notificación de éxito
-      toast.success(`Tipo de producto ${nombre} registrado con exito!`, {
+      toast.success(`Forma de pago ${nombre} registrado con exito!`, {
         position: "top-right",
         autoClose: 3000, // Cierra la notificación automáticamente después de 3 segundos
         hideProgressBar: false,
@@ -36,12 +36,11 @@ const AgregarTipoProducto = () => {
       });
 
       // Redirigir después de agregar exitosamente
-      // navigate("/consultar-tiposproductos"); // Cambia "/consultar" por la ruta que corresponda
       // Limpia los campos del formulario
       setNombre("");
       setDescripcion("");
     } catch (error) {
-      setError("Error al agregar el tipo de producto");
+      setError("Error al agregar la forma de pago");
     }
   };
 
@@ -49,7 +48,7 @@ const AgregarTipoProducto = () => {
     <div className="w-full h-screen items-start justify-center bg-[#7A7A7A] py-6">
       <div className="bg-[#eaeaea] p-6 rounded-xl mx-96">
         <div className="flex flex-row p-1 justify-center items-center mb-2">
-          <h1 className="text-3xl font-semibold">Registrar Tipo de Producto</h1>
+          <h1 className="text-3xl font-semibold">Registrar Forma de Pago</h1>
         </div>
 
         <form onSubmit={handleSubmit} className="mt-4">
@@ -91,7 +90,7 @@ const AgregarTipoProducto = () => {
           <div className="flex flex-row mt-4 justify-between items-center">
             <button
               onClick={() => {
-                navigate("/consultar-tiposproductos");
+                navigate("/consultar-formaspago");
               }}
               className="p-2  bg-slate-700 text-white font-bold rounded hover:bg-slate-400  focus:outline-none w-full mr-4"
             >
@@ -113,4 +112,4 @@ const AgregarTipoProducto = () => {
   );
 };
 
-export default AgregarTipoProducto;
+export default AgregarFormaPago;

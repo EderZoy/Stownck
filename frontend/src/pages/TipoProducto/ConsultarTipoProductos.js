@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import obtenerTiposDeProductos from "../../service/RequestGetTipoProducto";
-import eliminarTipoProducto from "../../service/RequestDeleteTipoProducto";
+import obtenerTiposDeProductos from "../../service/RequestTipoProducto/RequestGetTipoProducto";
+import eliminarTipoProducto from "../../service/RequestTipoProducto/RequestDeleteTipoProducto";
 import ConfirmDeleteModal from "./EliminarTipoProducto";
 // import EditarTipoProducto from "./EditarTipoProducto";
 import * as FaIcons from "react-icons/fa";
@@ -95,7 +95,7 @@ const ConsultarTipoProducto = () => {
 
   return (
     <div className=" w-full h-screen items-start justify-center bg-[#7A7A7A] py-6">
-      <div className="bg-[#eaeaea] p-6 rounded-xl mx-44 h-[540px]">
+      <div className="bg-[#eaeaea] p-6 rounded-xl mx-44 mb-96">
         <div className="flex flex-row p-1 justify-between items-center mb-1">
           <h1 className="text-3xl font-semibold">Tipos de Productos</h1>
           <Link
@@ -117,41 +117,45 @@ const ConsultarTipoProducto = () => {
         </div>
 
         {/* Tabla de tipos de productos */}
-        <table className="min-w-full bg-white border border-slate-300 items-center rounded-lg">
-          <thead className="bg-[#dfdfdf]">
-            <tr>
-              <th className="border-b p-2">Nro.</th>
-              <th className="border-b p-2">Nombre</th>
-              <th className="border-b p-2">Descripción</th>
-              <th className="border-b p-2">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {tiposProductosFiltrados.map((tipo) => (
-              <tr key={tipo.id}>
-                <td className="border-b p-2 text-center">{tipo.id}</td>
-                <td className="border-b p-2 text-start">{tipo.nombre}</td>
-                <td className="border-b p-2 text-center">{tipo.descripcion}</td>
-                <td className="border-b p-2 text-center">
-                  <div className="flex flex-row justify-center">
-                    <Link
-                      to={`/editar-tipoproducto/${tipo.id}`} // Ajusta la ruta según tu estructura de navegación
-                      className="text-black hover:underline hover:text-emerald-500 text-center mx-2"
-                    >
-                      <FaIcons.FaPencilAlt></FaIcons.FaPencilAlt>
-                    </Link>
-                    <button
-                      onClick={() => handleDeleteClick(tipo)}
-                      className="text-red-500 hover:underline hover:text-red-700 mx-2 text-center"
-                    >
-                      <FaIcons.FaTrashAlt></FaIcons.FaTrashAlt>
-                    </button>
-                  </div>
-                </td>
+        <div className="h-[330px] bg-gray-50">
+          <table className="min-w-full bg-white border border-slate-300 items-center rounded-lg">
+            <thead className="bg-[#dfdfdf]">
+              <tr>
+                <th className="border-b p-2">Nro.</th>
+                <th className="border-b p-2">Nombre</th>
+                <th className="border-b p-2">Descripción</th>
+                <th className="border-b p-2">Acciones</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {tiposProductosFiltrados.map((tipo) => (
+                <tr key={tipo.id}>
+                  <td className="border-b p-2 text-center">{tipo.id}</td>
+                  <td className="border-b p-2 text-start">{tipo.nombre}</td>
+                  <td className="border-b p-2 text-center">
+                    {tipo.descripcion}
+                  </td>
+                  <td className="border-b p-2 text-center">
+                    <div className="flex flex-row justify-center">
+                      <Link
+                        to={`/editar-tipoproducto/${tipo.id}`} // Ajusta la ruta según tu estructura de navegación
+                        className="text-black hover:underline hover:text-emerald-500 text-center mx-2"
+                      >
+                        <FaIcons.FaPencilAlt></FaIcons.FaPencilAlt>
+                      </Link>
+                      <button
+                        onClick={() => handleDeleteClick(tipo)}
+                        className="text-red-500 hover:underline hover:text-red-700 mx-2 text-center"
+                      >
+                        <FaIcons.FaTrashAlt></FaIcons.FaTrashAlt>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
         {/* Modal de confirmación de eliminación */}
         {isDeleteModalOpen && (
@@ -165,9 +169,9 @@ const ConsultarTipoProducto = () => {
 
         {/* Paginación */}
         <div
-          className="mb-[45px] flex justify-center items-end"
+          className="flex justify-center items-end mt-4"
           style={{
-            position: "absolute",
+            position: "relative",
             bottom: "0px", // Ajusta la distancia desde la parte inferior según sea necesario
             left: "50%", // Ajusta la posición horizontal según sea necesario
             transform: "translateX(-50%)", // Centra el elemento horizontalmente
