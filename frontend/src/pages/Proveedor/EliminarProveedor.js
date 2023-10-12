@@ -1,7 +1,7 @@
 import React from "react";
 import Modal from "react-modal";
-import { useNavigate } from "react-router-dom";
 import imgDelete from "../../images/delete.png";
+import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -9,15 +9,14 @@ const ConfirmDeleteModal = ({
   isOpen,
   onRequestClose,
   onDeleteConfirm,
-  tipoProducto,
+  proveedor,
 }) => {
   const navigate = useNavigate();
   const handleConfirm = async () => {
     console.log("Confirmación de eliminación ejecutada");
-    onDeleteConfirm(tipoProducto.id);
+    onDeleteConfirm(proveedor.id);
 
-    // Muestra la notificación de éxito
-    toast.info(`Tipo de producto eliminado con éxito!`, {
+    toast.info(`Proveedor eliminado con éxito!`, {
       position: "top-right",
       autoClose: 3000,
       hideProgressBar: false,
@@ -26,7 +25,6 @@ const ConfirmDeleteModal = ({
       draggable: true,
       progress: undefined,
     });
-
     // Espera 3 segundos antes de redirigir
     await new Promise((resolve) => setTimeout(resolve, 3000));
     onRequestClose();
@@ -35,8 +33,8 @@ const ConfirmDeleteModal = ({
   };
 
   // Verificar si el tipoProducto es nulo o indefinido antes de acceder a sus propiedades
-  if (!tipoProducto || !tipoProducto.nombre) {
-    return <p>Error: No se pudo cargar la información del tipo de producto.</p>;
+  if (!proveedor || !proveedor.nombre) {
+    return <p>Error: No se pudo cargar la información del proveedor.</p>;
   }
 
   return (
@@ -47,7 +45,7 @@ const ConfirmDeleteModal = ({
       className="bg-[#eaeaea] p-6  rounded-xl mx-[450px] justify-center items-center py-4 mt-36"
     >
       <h2 className="text-2xl font-semibold text-center mt-6">
-        Eliminar Tipo de Producto
+        Eliminar Proveedor
       </h2>
       <img
         src={imgDelete}
@@ -55,8 +53,8 @@ const ConfirmDeleteModal = ({
         className="mx-auto w-28 mb-4 mt-4"
       />
       <p className="text-xl font-base text-center my-10">
-        ¿Estás seguro de que deseas eliminar el tipo de producto{" "}
-        <span className="font-semibold"> {tipoProducto.nombre}</span>?
+        ¿Estás seguro de que deseas eliminar el proveedor{" "}
+        <span className="font-semibold"> {proveedor.nombre}</span>?
       </p>
       <div className="flex flex-row mt-4 justify-between items-center">
         <button
@@ -71,7 +69,6 @@ const ConfirmDeleteModal = ({
         >
           Eliminar
         </button>
-
         {/* Componente de contenedor de notificaciones */}
         <ToastContainer position="top-right" autoClose={3000} />
       </div>

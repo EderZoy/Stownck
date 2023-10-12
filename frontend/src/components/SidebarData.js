@@ -35,7 +35,7 @@ export const SidebarData = [
   },
   {
     titulo: "Proveedores",
-    path: "/proveedores",
+    path: "/consultar-proveedores",
     icono: <FaIcons.FaDolly />,
     cName:
       "text-decoration-none text-black text-xl w-95 h-12 flex items-center px-4 rounded hover:bg-[#7BBBB7]",
