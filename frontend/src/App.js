@@ -12,6 +12,9 @@ import EditarFormaPago from "./pages/FormaPago/EditarFormaPago";
 import ConsultarProveedor from "./pages/Proveedor/ConsultarProveedores";
 import RegistrarProveedor from "./pages/Proveedor/RegistrarProveedor";
 import EditarProveedor from "./pages/Proveedor/EditarProveedor";
+import ConsultarProducto from "./pages/Producto/ConsultarProductos";
+import RegistrarProducto from "./pages/Producto/RegistrarProducto";
+import EditarProducto from "./pages/Producto/EditarProducto";
 import NavBar from "./components/NavBar";
 import { AuthProvider } from "./context/AuthProvider";
 // import PrivateRoute from "./service/PrivateRoute";
@@ -53,6 +56,9 @@ const App = () => {
           />
           <Route path="registrar-proveedor" element={<RegistrarProveedor />} />
           <Route path="editar-proveedor/:id" element={<EditarProveedor />} />
+          <Route path="consultar-productos" element={<ConsultarProducto />} />
+          <Route path="registrar-producto" element={<RegistrarProducto />} />
+          <Route path="editar-producto/:id" element={<EditarProducto />} />
           {/* Otras rutas */}
         </Routes>
       </div>

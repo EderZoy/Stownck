@@ -4,18 +4,32 @@ import backgroundImage from "../images/fononegro.png"; // Ruta a tu imagen de fo
 import logo from "../images/logo.png";
 import * as FaIcons from "react-icons/fa";
 import { AiFillAlert } from "react-icons/ai";
+import ProductoModal from "./Producto/BuscarProducto";
+import obtenerInformacionProducto from "../service/RequestProducto/RequestInfoProducto";
 
 const Principal = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [alerts, setAlerts] = useState([]);
+  const [isBusquedaModalOpen, setIsBusquedaModalOpen] = useState(false);
+  const [selectedProducto, setSelectedProducto] = useState(null);
 
   const handleInputChange = (event) => {
     setSearchTerm(event.target.value);
   };
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     // Aquí puedes realizar alguna acción cuando se realiza la búsqueda
     console.log("Búsqueda realizada:", searchTerm);
+    try {
+      // Realizar la lógica para obtener la información del producto
+      const productoEncontrado = await obtenerInformacionProducto(searchTerm);
+
+      // Abrir el modal con la información del producto
+      setIsBusquedaModalOpen(true);
+      setSelectedProducto(productoEncontrado);
+    } catch (error) {
+      console.error("Error al obtener información del producto:", error);
+    }
   };
 
   // eslint-disable-next-line no-unused-vars
@@ -98,6 +112,14 @@ const Principal = () => {
             </div>
           ))}
         </div>
+
+        {isBusquedaModalOpen && (
+          <ProductoModal
+            isOpen={isBusquedaModalOpen}
+            onRequestClose={() => setIsBusquedaModalOpen(false)}
+            producto={selectedProducto}
+          />
+        )}
       </div>
     </div>
   );

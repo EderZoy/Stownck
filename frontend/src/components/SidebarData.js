@@ -14,7 +14,7 @@ export const SidebarData = [
   },
   {
     titulo: "Productos",
-    path: "/productos",
+    path: "/consultar-productos",
     icono: <FaIcons.FaTshirt />,
     cName:
       "text-decoration-none text-black text-xl w-95 h-12 flex items-center px-4 rounded hover:bg-[#7BBBB7]",

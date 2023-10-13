@@ -1,9 +1,9 @@
 import config from "../config";
 
-const obtenerFormasPago = async ({ currentPage }) => {
+const obtenerInformacionDelProducto = async (codigo) => {
   try {
     const response = await fetch(
-      `${config.routeBase}/api/forma-pago?page=${currentPage}`,
+      `${config.routeBase}/api/producto/codigo/${codigo}`,
       {
         method: "GET",
         headers: {
@@ -17,16 +17,12 @@ const obtenerFormasPago = async ({ currentPage }) => {
       throw new Error("Network response was not ok");
     }
 
-    const formasPago = await response.json(); // Parseamos la respuesta como JSON
-
-    console.log(JSON.stringify(formasPago));
-
-    return formasPago; // Retornamos los tipos de productos obtenidos
+    const producto = await response.json();
+    return producto;
   } catch (error) {
     console.error(error);
-    console.log(`${localStorage.getItem("token")}`);
     throw error;
   }
 };
 
-export default obtenerFormasPago;
+export default obtenerInformacionDelProducto;
