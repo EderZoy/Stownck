@@ -9,5 +9,6 @@ router.get("/proveedor", ProveedorController.getAllProveedores);
 router.get("/proveedor/:id", ProveedorController.getProveedorById);
 router.put("/proveedor/update/:id", ProveedorController.updateProveedor);
 router.delete("/proveedor/delete/:id", ProveedorController.deleteProveedor);
+router.get("/proveedores", ProveedorController.getProveedores);
 
 module.exports = router;

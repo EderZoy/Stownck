@@ -47,6 +47,16 @@ const getProveedorById = async (req, res) => {
   }
 };
 
+//Obtener proveeedores para lista
+const getProveedores = async (req, res) => {
+  try {
+    const proveedores = await Proveedor.findAll();
+    return res.status(200).json(proveedores);
+  } catch (error) {
+    return res.status(500).json({ error: "Error al obtener proveedores" });
+  }
+};
+
 // Editar proveedor
 const updateProveedor = async (req, res) => {
   const { id } = req.params;
@@ -84,4 +94,5 @@ module.exports = {
   getProveedorById,
   updateProveedor,
   deleteProveedor,
+  getProveedores,
 };

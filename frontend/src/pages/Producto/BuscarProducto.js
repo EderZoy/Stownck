@@ -51,7 +51,7 @@ const ProductoModal = ({ isOpen, onRequestClose, producto }) => {
         <p className="mb-2 bg-slate-300 p-1 px-4 rounded-sm font-bold">
           <div className="justify-between flex flex-row">
             <p> Precio de Venta: </p>
-            <p className="font-semibold text-black">{producto.precioVenta}</p>
+            <p className="font-semibold text-black">${producto.precioVenta}</p>
           </div>
         </p>
       </div>

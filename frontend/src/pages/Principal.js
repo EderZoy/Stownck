@@ -6,12 +6,15 @@ import * as FaIcons from "react-icons/fa";
 import { AiFillAlert } from "react-icons/ai";
 import ProductoModal from "./Producto/BuscarProducto";
 import obtenerInformacionProducto from "../service/RequestProducto/RequestInfoProducto";
+import { useNavigate } from "react-router-dom";
 
 const Principal = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [alerts, setAlerts] = useState([]);
   const [isBusquedaModalOpen, setIsBusquedaModalOpen] = useState(false);
   const [selectedProducto, setSelectedProducto] = useState(null);
+
+  const navigate = useNavigate(); // Obtén la función navigate
 
   const handleInputChange = (event) => {
     setSearchTerm(event.target.value);
@@ -36,6 +39,10 @@ const Principal = () => {
   const addAlert = (message, type) => {
     const newAlert = { message, type };
     setAlerts([...alerts, newAlert]);
+  };
+
+  const handleConsultarCompras = () => {
+    navigate("/consultar-compras"); // Usa la función navigate para ir a /consultar-compras
   };
 
   return (
@@ -69,7 +76,7 @@ const Principal = () => {
         <div className="mt-8 flex justify-between w-[900px]">
           <button
             className="py-8 w-72 bg-[#708786] text-black text-3xl rounded-lg hover:bg-[#7BBBB7] focus:outline-none font-semibold"
-            onClick={() => ""}
+            onClick={handleConsultarCompras}
           >
             <FaIcons.FaTruckLoading className="text-2xl absolute  ml-[250px] mt-[-20px]"></FaIcons.FaTruckLoading>
             Registrar Compra

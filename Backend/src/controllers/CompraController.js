@@ -4,6 +4,8 @@ const Usuario = require("../models/Usuario");
 const Compra = require("../models/Compra");
 const Producto = require("../models/Producto");
 
+const ITEMS_PER_PAGE = 8; // Establece el número de elementos por página
+
 const createCompra = async (req, res) => {
   try {
     const nuevaCompra = await Compra.create(req.body);
@@ -15,7 +17,13 @@ const createCompra = async (req, res) => {
 
 const getAllCompras = async (req, res) => {
   try {
-    const compras = await Compra.findAll({
+    const page = parseInt(req.query.page) || 1;
+    const offset = (page - 1) * ITEMS_PER_PAGE;
+
+    // Obtener las compras paginadas
+    const { count, rows: compras } = await Compra.findAndCountAll({
+      limit: ITEMS_PER_PAGE,
+      offset,
       include: [{ model: Proveedor }, { model: Usuario }],
     });
 
@@ -27,14 +35,24 @@ const getAllCompras = async (req, res) => {
           include: [Producto],
         });
 
+        // Calcular el total de la compra sumando los precios de compra de los detalles
+        const totalCompra = detalles.reduce((total, detalle) => {
+          return total + detalle.precioCompra * detalle.cantidad;
+        }, 0);
+
         return {
           ...compra.toJSON(),
           detallesProductoCompra: detalles,
+          total: totalCompra,
         };
       })
     );
 
-    return res.status(200).json(comprasConDetalles);
+    return res.status(200).json({
+      compras: comprasConDetalles,
+      totalPages: Math.ceil(count / ITEMS_PER_PAGE),
+      currentPage: page,
+    });
   } catch (error) {
     return res.status(500).json({ error: "Error al obtener las compras" });
   }

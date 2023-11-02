@@ -58,7 +58,18 @@ const updateProducto = async (req, res) => {
     if (!producto) {
       return res.status(404).json({ error: "Producto no encontrado" });
     }
-    await producto.update(req.body);
+
+    // Sumar la cantidad si se proporciona en la solicitud
+    if (req.body.cantidad !== undefined) {
+      producto.cantidad += req.body.cantidad;
+    }
+    // Actualizar precio de venta si se proporciona en la solicitud
+    if (req.body.precioVenta !== undefined) {
+      producto.precioVenta = req.body.precioVenta;
+    }
+    // Guardar los cambios en la base de datos
+    await producto.save();
+
     return res.status(200).json(producto);
   } catch (error) {
     return res.status(500).json({ error: "Error al actualizar el producto" });
@@ -144,6 +155,16 @@ const getProductoByCodigo = async (req, res) => {
   }
 };
 
+//Obtener productos para lista
+const getProductos = async (req, res) => {
+  try {
+    const productos = await Producto.findAll();
+    return res.status(200).json(productos);
+  } catch (error) {
+    return res.status(500).json({ error: "Error al obtener productos" });
+  }
+};
+
 module.exports = {
   createProducto,
   getAllProductos,
@@ -152,4 +173,5 @@ module.exports = {
   deleteProducto,
   obtenerCodigoUnico,
   getProductoByCodigo,
+  getProductos,
 };
