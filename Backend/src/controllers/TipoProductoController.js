@@ -38,6 +38,17 @@ const getAllTipoProductos = async (req, res) => {
   }
 };
 
+const getTipos = async (req, res) => {
+  try {
+    const tipoProductos = await TipoProducto.findAll();
+    return res.status(200).json(tipoProductos);
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ error: "Error al obtener tipos de producto" });
+  }
+};
+
 const getTipoProductoById = async (req, res) => {
   const { id } = req.params;
   try {
@@ -96,4 +107,5 @@ module.exports = {
   getTipoProductoById,
   updateTipoProducto,
   deleteTipoProducto,
+  getTipos,
 };

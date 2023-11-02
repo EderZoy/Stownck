@@ -9,5 +9,8 @@ router.get("/producto", ProductoController.getAllProductos);
 router.get("/producto/:id", ProductoController.getProductoById);
 router.put("/producto/update/:id", ProductoController.updateProducto);
 router.delete("/producto/delete/:id", ProductoController.deleteProducto);
+router.get("/codigo", ProductoController.obtenerCodigoUnico);
+router.get("/producto/codigo/:codigo", ProductoController.getProductoByCodigo);
+router.get("/productos", ProductoController.getProductos);
 
 module.exports = router;

@@ -1,6 +1,9 @@
 import React from "react";
 import Modal from "react-modal";
+import { useNavigate } from "react-router-dom";
 import imgDelete from "../../images/delete.png";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ConfirmDeleteModal = ({
   isOpen,
@@ -8,10 +11,27 @@ const ConfirmDeleteModal = ({
   onDeleteConfirm,
   tipoProducto,
 }) => {
-  const handleConfirm = () => {
+  const navigate = useNavigate();
+  const handleConfirm = async () => {
     console.log("Confirmación de eliminación ejecutada");
     onDeleteConfirm(tipoProducto.id);
+
+    // Muestra la notificación de éxito
+    toast.info(`Tipo de producto eliminado con éxito!`, {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+
+    // Espera 3 segundos antes de redirigir
+    await new Promise((resolve) => setTimeout(resolve, 3000));
     onRequestClose();
+    // Redirigir después de actualizar exitosamente
+    navigate("/principal");
   };
 
   // Verificar si el tipoProducto es nulo o indefinido antes de acceder a sus propiedades
@@ -51,6 +71,9 @@ const ConfirmDeleteModal = ({
         >
           Eliminar
         </button>
+
+        {/* Componente de contenedor de notificaciones */}
+        <ToastContainer position="top-right" autoClose={3000} />
       </div>
     </Modal>
   );

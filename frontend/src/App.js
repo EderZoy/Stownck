@@ -9,6 +9,14 @@ import EditarTipoProducto from "./pages/TipoProducto/EditarTipoProducto";
 import ConsultarFormasPago from "./pages/FormaPago/ConsultarFormasPago";
 import RegistrarFormaPago from "./pages/FormaPago/RegistrarFormaPago";
 import EditarFormaPago from "./pages/FormaPago/EditarFormaPago";
+import ConsultarProveedor from "./pages/Proveedor/ConsultarProveedores";
+import RegistrarProveedor from "./pages/Proveedor/RegistrarProveedor";
+import EditarProveedor from "./pages/Proveedor/EditarProveedor";
+import ConsultarProducto from "./pages/Producto/ConsultarProductos";
+import RegistrarProducto from "./pages/Producto/RegistrarProducto";
+import EditarProducto from "./pages/Producto/EditarProducto";
+import ConsultarCompras from "./pages/Compras/ConsultarCompras";
+import RegistrarCompra from "./pages/Compras/RegistrarCompra";
 import NavBar from "./components/NavBar";
 import { AuthProvider } from "./context/AuthProvider";
 // import PrivateRoute from "./service/PrivateRoute";
@@ -44,6 +52,17 @@ const App = () => {
           />
           <Route path="registrar-formapago" element={<RegistrarFormaPago />} />
           <Route path="editar-formapago/:id" element={<EditarFormaPago />} />
+          <Route
+            path="consultar-proveedores"
+            element={<ConsultarProveedor />}
+          />
+          <Route path="registrar-proveedor" element={<RegistrarProveedor />} />
+          <Route path="editar-proveedor/:id" element={<EditarProveedor />} />
+          <Route path="consultar-productos" element={<ConsultarProducto />} />
+          <Route path="registrar-producto" element={<RegistrarProducto />} />
+          <Route path="editar-producto/:id" element={<EditarProducto />} />
+          <Route path="consultar-compras" element={<ConsultarCompras />} />
+          <Route path="registrar-compra" element={<RegistrarCompra />} />
           {/* Otras rutas */}
         </Routes>
       </div>

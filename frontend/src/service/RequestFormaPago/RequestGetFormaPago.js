@@ -1,6 +1,6 @@
 import config from "../config";
 
-const obtenerTiposDeProductos = async ({ currentPage }) => {
+const obtenerFormasPago = async ({ currentPage }) => {
   try {
     const response = await fetch(
       `${config.routeBase}/api/forma-pago?page=${currentPage}`,
@@ -29,4 +29,4 @@ const obtenerTiposDeProductos = async ({ currentPage }) => {
   }
 };
 
-export default obtenerTiposDeProductos;
+export default obtenerFormasPago;

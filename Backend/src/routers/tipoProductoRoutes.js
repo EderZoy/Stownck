@@ -15,5 +15,6 @@ router.delete(
   "/tipo-producto/delete/:id",
   TipoProductoController.deleteTipoProducto
 );
+router.get("/tipos", TipoProductoController.getTipos);
 
 module.exports = router;
