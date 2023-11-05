@@ -58,6 +58,21 @@ const updateProducto = async (req, res) => {
     if (!producto) {
       return res.status(404).json({ error: "Producto no encontrado" });
     }
+    await producto.update(req.body);
+    return res.status(200).json(producto);
+  } catch (error) {
+    return res.status(500).json({ error: "Error al actualizar el producto" });
+  }
+};
+
+// Editar Producto cuando se compra
+const updateProductoCompra = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const producto = await Producto.findByPk(id);
+    if (!producto) {
+      return res.status(404).json({ error: "Producto no encontrado" });
+    }
 
     // Sumar la cantidad si se proporciona en la solicitud
     if (req.body.cantidad !== undefined) {
@@ -66,6 +81,28 @@ const updateProducto = async (req, res) => {
     // Actualizar precio de venta si se proporciona en la solicitud
     if (req.body.precioVenta !== undefined) {
       producto.precioVenta = req.body.precioVenta;
+    }
+    // Guardar los cambios en la base de datos
+    await producto.save();
+
+    return res.status(200).json(producto);
+  } catch (error) {
+    return res.status(500).json({ error: "Error al actualizar el producto" });
+  }
+};
+
+// Editar Producto Venta
+const updateProductoVenta = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const producto = await Producto.findByPk(id);
+    if (!producto) {
+      return res.status(404).json({ error: "Producto no encontrado" });
+    }
+
+    // Restar la cantidad si se proporciona en la solicitud
+    if (req.body.cantidad !== undefined) {
+      producto.cantidad -= req.body.cantidad;
     }
     // Guardar los cambios en la base de datos
     await producto.save();
@@ -169,6 +206,8 @@ module.exports = {
   createProducto,
   getAllProductos,
   getProductoById,
+  updateProductoCompra,
+  updateProductoVenta,
   updateProducto,
   deleteProducto,
   obtenerCodigoUnico,

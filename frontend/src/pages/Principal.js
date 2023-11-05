@@ -45,6 +45,10 @@ const Principal = () => {
     navigate("/consultar-compras"); // Usa la función navigate para ir a /consultar-compras
   };
 
+  const handleConsultarVentas = () => {
+    navigate("/consultar-ventas");
+  };
+
   return (
     <div
       className="h-screen flex items-start justify-center bg-cover"
@@ -83,7 +87,7 @@ const Principal = () => {
           </button>
           <button
             className="py-8 w-72 bg-[#708786] text-black text-3xl rounded-lg hover:bg-[#7BBBB7] focus:outline-none font-semibold"
-            onClick={() => ""}
+            onClick={handleConsultarVentas}
           >
             <FaIcons.FaShoppingCart className="text-2xl absolute  ml-[250px] mt-[-20px]"></FaIcons.FaShoppingCart>
             Registrar Venta

@@ -9,5 +9,6 @@ router.get("/forma-pago", FormaPagoController.getAllFormasPago);
 router.get("/forma-pago/:id", FormaPagoController.getFormaPagoById);
 router.put("/forma-pago/update/:id", FormaPagoController.updateFormaPago);
 router.delete("/forma-pago/delete/:id", FormaPagoController.deleteFormaPago);
+router.get("/formaspago", FormaPagoController.getFormasPago);
 
 module.exports = router;

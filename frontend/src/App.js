@@ -17,6 +17,8 @@ import RegistrarProducto from "./pages/Producto/RegistrarProducto";
 import EditarProducto from "./pages/Producto/EditarProducto";
 import ConsultarCompras from "./pages/Compras/ConsultarCompras";
 import RegistrarCompra from "./pages/Compras/RegistrarCompra";
+import ConsultarVentas from "./pages/Ventas/ConsultarVentas";
+import RegistrarVenta from "./pages/Ventas/RegistrarVenta";
 import NavBar from "./components/NavBar";
 import { AuthProvider } from "./context/AuthProvider";
 // import PrivateRoute from "./service/PrivateRoute";
@@ -63,6 +65,8 @@ const App = () => {
           <Route path="editar-producto/:id" element={<EditarProducto />} />
           <Route path="consultar-compras" element={<ConsultarCompras />} />
           <Route path="registrar-compra" element={<RegistrarCompra />} />
+          <Route path="consultar-ventas" element={<ConsultarVentas />} />
+          <Route path="registrar-venta" element={<RegistrarVenta />} />
           {/* Otras rutas */}
         </Routes>
       </div>
