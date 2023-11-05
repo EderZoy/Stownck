@@ -46,6 +46,18 @@ const getFormaPagoById = async (req, res) => {
   }
 };
 
+//Obtener formas pago para lista
+const getFormasPago = async (req, res) => {
+  try {
+    const formasPago = await FormaPago.findAll();
+    return res.status(200).json(formasPago);
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ error: "Error al obtener las formas de pago" });
+  }
+};
+
 // Editar
 const updateFormaPago = async (req, res) => {
   const { id } = req.params;
@@ -82,4 +94,5 @@ module.exports = {
   getFormaPagoById,
   updateFormaPago,
   deleteFormaPago,
+  getFormasPago,
 };

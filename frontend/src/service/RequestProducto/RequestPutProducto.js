@@ -3,7 +3,7 @@ import config from "../config";
 const actualizarProducto = async (id, datos) => {
   try {
     const response = await fetch(
-      `${config.routeBase}/api/producto/update/${id}`,
+      `${config.routeBase}/api/producto/updateProducto/${id}`,
       {
         method: "PUT",
         headers: {

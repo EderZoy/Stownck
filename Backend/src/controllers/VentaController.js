@@ -1,4 +1,10 @@
 const Venta = require("../models/Venta");
+const FormaPago = require("../models/FormaPago");
+const ProductoVenta = require("../models/ProductoVenta");
+const Producto = require("../models/Producto");
+const Usuario = require("../models/Usuario");
+
+const ITEMS_PER_PAGE = 8; // Establece el número de elementos por página
 
 // Crear
 const createVenta = async (req, res) => {
@@ -13,16 +19,42 @@ const createVenta = async (req, res) => {
 // Obtener todos
 const getAllVentas = async (req, res) => {
   try {
-    const ventas = await Venta.findAll({
-      include: [
-        {
-          model: ProductoVenta,
-          include: [Producto], // Incluye los detalles del ProductoVenta y el Producto asociado
-        },
-        { model: FormaPago },
-      ],
+    const page = parseInt(req.query.page) || 1;
+    const offset = (page - 1) * ITEMS_PER_PAGE;
+
+    // Obtener las ventas paginadas
+    const { count, rows: ventas } = await Venta.findAndCountAll({
+      limit: ITEMS_PER_PAGE,
+      offset,
+      include: [{ model: FormaPago }, { model: Usuario }],
     });
-    return res.status(200).json(ventas);
+
+    // Obtener los detalles de ProductoVenta para cada venta
+    const ventaConDetalles = await Promise.all(
+      ventas.map(async (venta) => {
+        const detalles = await ProductoVenta.findAll({
+          where: { ventaId: venta.id },
+          include: [Producto],
+        });
+
+        // Calcular el total de la venta sumando los precios de venta de los detalles
+        const totalVenta = detalles.reduce((total, detalle) => {
+          return total + detalle.precio * detalle.cantidad;
+        }, 0);
+
+        return {
+          ...venta.toJSON(),
+          detallesProductoVenta: detalles,
+          total: totalVenta,
+        };
+      })
+    );
+
+    return res.status(200).json({
+      ventas: ventaConDetalles,
+      totalPages: Math.ceil(count / ITEMS_PER_PAGE),
+      currentPage: page,
+    });
   } catch (error) {
     return res.status(500).json({ error: "Error al obtener las Ventas" });
   }
@@ -39,6 +71,7 @@ const getVentaById = async (req, res) => {
           include: [Producto], // Incluye los detalles del ProductoVenta y el Producto asociado
         },
         { model: FormaPago },
+        { model: Usuario },
       ],
     });
 
