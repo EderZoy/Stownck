@@ -113,6 +113,28 @@ const updateProductoVenta = async (req, res) => {
   }
 };
 
+// Editar Producto Venta
+const updateProductoCambio = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const producto = await Producto.findByPk(id);
+    if (!producto) {
+      return res.status(404).json({ error: "Producto no encontrado" });
+    }
+
+    // Restar el precio si se proporciona en la solicitud
+    if (req.body.precioVenta !== undefined) {
+      producto.precioVenta == req.body.precioVenta;
+    }
+    // Guardar los cambios en la base de datos
+    await producto.save();
+
+    return res.status(200).json(producto);
+  } catch (error) {
+    return res.status(500).json({ error: "Error al actualizar el producto" });
+  }
+};
+
 // Eliminar
 const deleteProducto = async (req, res) => {
   const { id } = req.params;
@@ -213,4 +235,5 @@ module.exports = {
   obtenerCodigoUnico,
   getProductoByCodigo,
   getProductos,
+  updateProductoCambio,
 };

@@ -14,6 +14,7 @@ const productoVentaRoutes = require("./src/routers/productoVentaRoutes");
 const ventaRoutes = require("./src/routers/ventaRoutes");
 const productoCambioRoutes = require("./src/routers/productoCambioRoutes");
 const cambioMasivoRoutes = require("./src/routers/cambioMasivoRoutes");
+const estadisticasRoutes = require("./src/routers/estadisticasRoutes");
 const claveSecreta = require("./src/config/claveSecreta");
 
 const app = express();
@@ -43,6 +44,7 @@ app.use("/api", authMiddleware, cambioMasivoRoutes);
 app.use("/api", authMiddleware, productoCompraRoutes);
 app.use("/api", authMiddleware, productoVentaRoutes);
 app.use("/api", authMiddleware, productoCambioRoutes);
+app.use("/api", authMiddleware, estadisticasRoutes);
 // Rutas de autenticación
 app.use("/auth", authRoutes);
 

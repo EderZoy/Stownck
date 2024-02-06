@@ -21,7 +21,7 @@ export const SidebarData = [
   },
   {
     titulo: "Informes",
-    path: "/dashboard",
+    path: "/consultar-estadisticas",
     icono: <FaIcons.FaRegChartBar />,
     cName:
       "text-decoration-none text-black text-xl w-95 h-12 flex items-center px-4 rounded hover:bg-[#7BBBB7]",

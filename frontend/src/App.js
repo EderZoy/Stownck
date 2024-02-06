@@ -21,6 +21,8 @@ import ConsultarVentas from "./pages/Ventas/ConsultarVentas";
 import RegistrarVenta from "./pages/Ventas/RegistrarVenta";
 import NavBar from "./components/NavBar";
 import { AuthProvider } from "./context/AuthProvider";
+import RegistrarCambioMasivo from "./pages/CambioMasivo/RegistrarCambioMasivo";
+import Dashboard from "./pages/Informes/Dashboard";
 // import PrivateRoute from "./service/PrivateRoute";
 
 const App = () => {
@@ -67,6 +69,8 @@ const App = () => {
           <Route path="registrar-compra" element={<RegistrarCompra />} />
           <Route path="consultar-ventas" element={<ConsultarVentas />} />
           <Route path="registrar-venta" element={<RegistrarVenta />} />
+          <Route path="registrar-cambio" element={<RegistrarCambioMasivo />} />
+          <Route path="consultar-estadisticas" element={<Dashboard />} />
           {/* Otras rutas */}
         </Routes>
       </div>

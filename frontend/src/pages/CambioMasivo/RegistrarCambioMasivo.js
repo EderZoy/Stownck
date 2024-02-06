@@ -1,44 +1,39 @@
 import React, { useState, useEffect } from "react";
-import obtenerFormasPago from "../../service/RequestFormaPago/RequestFormasPago";
-import obtenerUsuarios from "../../service/RequestUsuarios/RequestResponsables";
 import * as FaIcons from "react-icons/fa";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import SearchBar from "../../components/SearhBar";
 import { Link } from "react-router-dom";
 import {
-  crearVenta,
-  crearDetalleVenta,
+  crearCambio,
+  crearDetalleCambio,
   actualizarProducto,
-} from "../../service/RequestVenta/RequestPostVenta";
+} from "../../service/RequestCambioPrecios/RequestPostCambio";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 
-const RegistrarVenta = () => {
+const RegistrarCambioMasivo = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedFormaPago, setSelectedFormaPago] = useState(null);
+  const [selectedTipoCambio, setSelectedTipoCambio] = useState(1);
   const [selectedFecha, setSelectedFecha] = useState(null);
-  const [formasPago, setFormasPago] = useState([]);
-  const [responsables, setResponsables] = useState([]);
-  const [selectedResponsable, setSelectedResponsable] = useState(null);
-  const [nombreCliente, setNombreCliente] = useState("");
-
-  const [detalleVenta, setDetalleVenta] = useState([]);
-  const [totalVenta, setTotalVenta] = useState(0);
+  let [porcentajeCambio, setPorcentaje] = useState(0);
+  const [tiposCambio, setTiposCambio] = useState([]);
+  const [detalleCambio, setDetalleCambio] = useState([]);
+  const [NuevoPrecio, setTotalNuevoPrecio] = useState(0);
 
   const navigate = useNavigate();
 
   // función para obtener los productos del servidor
   const fetchData = async () => {
     try {
-      const formasPago = await obtenerFormasPago();
-      setFormasPago(formasPago); // Actualiza el estado de formas de pago
+      const tiposCambio = [
+        { id: 1, nombre: "Aumento" },
+        { id: 2, nombre: "Rebaja" },
+      ];
 
-      // Obtener usuarios
-      const responsables = await obtenerUsuarios(); // Reemplaza con la función correcta para obtener tipos
-      setResponsables(responsables); // Actualiza el estado de responsables
+      setTiposCambio(tiposCambio);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -52,7 +47,7 @@ const RegistrarVenta = () => {
 
   const handleAgregarProducto = (producto) => {
     // Verificar si el producto ya está en la lista
-    const productoExistente = detalleVenta.find(
+    const productoExistente = detalleCambio.find(
       (detalle) => detalle.producto.id === producto.id
     );
 
@@ -63,42 +58,40 @@ const RegistrarVenta = () => {
     }
     const nuevoDetalle = {
       producto,
-      cantidad: 1,
-      precio: producto.precioVenta,
+      nuevoPrecio: 0,
     };
 
-    setDetalleVenta([...detalleVenta, nuevoDetalle]);
+    setDetalleCambio([...detalleCambio, nuevoDetalle]);
   };
 
   const handleEliminarProducto = (index) => {
-    const nuevosDetalles = [...detalleVenta];
+    const nuevosDetalles = [...detalleCambio];
     nuevosDetalles.splice(index, 1);
-    setDetalleVenta(nuevosDetalles);
+    setDetalleCambio(nuevosDetalles);
   };
 
-  const handleCantidadChange = (index, cantidad) => {
-    // Verificar que la cantidad no sea menor a 1 ni mayor a la cantidad del producto seleccionado
-    const cantidadMaxima = detalleVenta[index].producto.cantidad; // Obtener la cantidad disponible del producto
+  const calcularNuevoPrecio = () => {
+    console.log(selectedTipoCambio);
 
-    if (cantidad < 1) {
-      cantidad = 1;
-    } else if (cantidad > cantidadMaxima) {
-      cantidad = cantidadMaxima;
+    let factor = 1;
+
+    if (selectedTipoCambio === 1) {
+      factor = porcentajeCambio / 100;
+    } else {
+      factor = (-1 * porcentajeCambio) / 100;
     }
 
-    const nuevosDetalles = [...detalleVenta];
-    nuevosDetalles[index].cantidad = cantidad;
-    setDetalleVenta(nuevosDetalles);
-    // Recalcular el total
-    calcularTotalVenta();
-  };
+    const nuevosDetalles = detalleCambio.map((detalle) => ({
+      ...detalle,
+      nuevoPrecio:
+        detalle.producto.precioVenta + detalle.producto.precioVenta * factor,
+    }));
 
-  const calcularTotalVenta = () => {
-    const total = detalleVenta.reduce((accum, detalle) => {
-      return accum + detalle.cantidad * detalle.precio;
-    }, 0);
+    console.log(nuevosDetalles);
+    console.log(factor);
+    console.log(detalleCambio);
 
-    setTotalVenta(total);
+    setDetalleCambio(nuevosDetalles);
   };
 
   if (loading) {
@@ -109,43 +102,42 @@ const RegistrarVenta = () => {
     return <p>Error: {error}</p>;
   }
 
-  const handleRegistroVenta = async () => {
+  const handleRegistroCambio = async () => {
     try {
-      // Paso 1: Registrar la venta y obtener su ID
-      const ventaData = {
-        fechaVenta: selectedFecha,
-        formaPagoId: selectedFormaPago,
-        usuarioId: selectedResponsable,
-        nombreCliente: nombreCliente,
+      // Paso 1: Registrar
+      const cambioData = {
+        fechaCambio: selectedFecha,
+        porcentaje: porcentajeCambio,
+        tipoCambio: selectedTipoCambio,
       };
-      const ventaResponse = await crearVenta(ventaData);
-      const ventaId = ventaResponse.id;
+      const cambioResponse = await crearCambio(cambioData);
+      const cambioMasivoId = cambioResponse.id;
 
       // Paso 2: Registrar los detalles de la venta
       await Promise.all(
-        detalleVenta.map(async (detalle) => {
-          const detalleVentaData = {
+        detalleCambio.map(async (detalle) => {
+          const detalleCambio = {
             productoId: detalle.producto.id,
-            ventaId: ventaId,
-            cantidad: detalle.cantidad,
-            precio: detalle.producto.precioVenta,
+            cambioMasivoId: cambioMasivoId,
+            nuevoPrecio: detalle.nuevoPrecio,
+            precioActual: 0,
           };
-          await crearDetalleVenta(detalleVentaData);
+          await crearDetalleCambio(detalleCambio);
         })
       );
 
-      // Paso 3: Actualizar la cantidad en el producto
+      // Paso 3: Actualizar prcio en el producto
       await Promise.all(
-        detalleVenta.map(async (detalle) => {
+        detalleCambio.map(async (detalle) => {
           const productoData = {
-            cantidad: detalle.cantidad,
+            precioVenta: detalle.nuevoPrecio,
           };
           await actualizarProducto(detalle.producto.id, productoData);
         })
       );
 
       // Muestra la notificación de éxito
-      toast.success(`Venta registrada con exito!`, {
+      toast.success(`Cambio registrado con exito!`, {
         position: "top-right",
         autoClose: 3000, // Cierra la notificación automáticamente después de 3 segundos
         hideProgressBar: false,
@@ -158,11 +150,11 @@ const RegistrarVenta = () => {
       // Espera 3 segundos antes de redirigir
       await new Promise((resolve) => setTimeout(resolve, 4000));
 
-      navigate("/consultar-ventas");
+      navigate("/principal");
 
-      console.log("Venta registrada exitosamente");
+      console.log("Cambio registrado exitosamente");
     } catch (error) {
-      console.error("Error al registrar la venta", error.message);
+      console.error("Error al registrar el cambio", error.message);
     }
   };
 
@@ -170,14 +162,16 @@ const RegistrarVenta = () => {
     <div className=" w-full h-screen items-start justify-center bg-[#7A7A7A] py-6">
       <div className="bg-[#eaeaea] p-6 rounded-xl mx-44 mb-96 pb-2">
         <div className="flex flex-row p-1 justify-between items-center mb-1">
-          <h1 className="text-3xl font-semibold">Registrar Venta</h1>
+          <h1 className="text-3xl font-semibold">
+            Registrar Cambio Masivo de Precios
+          </h1>
         </div>
 
         <div className="flex flex-row justify-between">
-          {/** Detalle de venta */}
+          {/** Detalle de cambio */}
           <div className="bg-white w-full mr-2 rounded-sm">
             <div className="flex flex-row justify-between items-center my-2">
-              <h1 className="text-2xl font-semibold p-2">Detalle de Venta</h1>
+              <h1 className="text-2xl font-semibold p-2">Detalle de Cambio</h1>
               <div className="flex flex-col mr-2">
                 <h1 className="text-xs font-semibold py-1 text-center bg-slate-100 my-1">
                   Si no encuentras el producto primero deberas registralo
@@ -191,52 +185,30 @@ const RegistrarVenta = () => {
             <p className="mx-2 bg-slate-300 h-0.5"></p>
 
             {/* Mostrar el detalle de venta */}
-            {detalleVenta.length === 0 && (
+            {detalleCambio.length === 0 && (
               <h2 className="text-center text-amber-500 text-xl font-semibold my-3">
-                Seleccione los productos a vender
+                Seleccione los productos a modificar
               </h2>
             )}
-            {detalleVenta.length > 0 && (
+            {detalleCambio.length > 0 && (
               <table className="w-full mt-2 text-center border-collapse text-sm">
                 <thead className="bg-gray-100">
                   <tr>
                     <th className="px-2 py-1">Producto</th>
-                    <th className="px-2 py-1">Medida</th>
                     <th className="px-2 py-1">Código</th>
-                    <th className="px-2 py-1">Stock Disponible</th>
-                    <th className="px-2 py-1">Cantidad</th>
-                    <th className="px-2 py-1">Precio Venta</th>
-                    <th className="px-2 py-1">Subtotal</th>
+                    <th className="px-2 py-1">Precio Actual</th>
+                    <th className="px-2 py-1">Nuevo Precio</th>
                     <th className="px-2 py-1">Quitar</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {detalleVenta.map((detalle, index) => (
+                  {detalleCambio.map((detalle, index) => (
                     <tr key={index}>
                       <td className="px-2 py-2 border-b-2">
                         {detalle.producto.nombre}
                       </td>
                       <td className="px-2 py-2 border-b-2">
-                        {detalle.producto.medida}
-                      </td>
-                      <td className="px-2 py-2 border-b-2">
                         {detalle.producto.codigo}
-                      </td>
-                      <td className="px-2 py-2 border-b-2">
-                        {detalle.producto.cantidad}
-                      </td>
-                      <td className="px-2 py-2 border-b-2">
-                        <input
-                          className="w-12 text-center border border-gray-100 rounded-md"
-                          type="number"
-                          value={detalle.cantidad}
-                          onChange={(e) =>
-                            handleCantidadChange(
-                              index,
-                              parseInt(e.target.value)
-                            )
-                          }
-                        />
                       </td>
                       <td className="border-b-2 px-2 py-2">
                         <div className="flex flex-row">
@@ -246,10 +218,12 @@ const RegistrarVenta = () => {
                           </p>
                         </div>
                       </td>
-                      <td className="px-2 py-2 border-b-2">
-                        <div className="flex flex-row text-center justify-center">
-                          <p className="mr-2">$</p>
-                          {detalle.producto.precioVenta * detalle.cantidad}
+                      <td className="border-b-2 px-2 py-2">
+                        <div className="flex flex-row">
+                          <p>$</p>
+                          <p className="w-20 text-center border border-gray-300 rounded-md ml-2">
+                            {detalle.nuevoPrecio.toFixed(2)}
+                          </p>
                         </div>
                       </td>
                       <td className="px-2 py-2 border-b-2">
@@ -262,62 +236,43 @@ const RegistrarVenta = () => {
                 </tbody>
               </table>
             )}
-            <div className="text-sm text-end font-bold mr-20 mt-4 ">
-              <p className=" text-yellow-600">
-                Total Venta: ${totalVenta.toFixed(2)}
-              </p>
-            </div>
           </div>
 
           <div className="flex flex-col  w-1/3">
-            {/** Informacion de Venta*/}
+            {/** Informacion de Cambio*/}
             <div className="bg-white rounded-sm">
               <div>
-                <h1 className="text-xl font-semibold p-2 my-2">
-                  Información General
+                <h1 className="text-xl font-semibold p-2 my-2 text-center">
+                  Información de modificación
                 </h1>
                 <p className="mx-2 bg-slate-300 h-0.5"></p>
                 <h1 className="text-sm font-semibold px-2 mt-2 mb-1">
-                  Forma de Pago
+                  Tipo de Cambio
                 </h1>
                 <select
-                  value={selectedFormaPago}
-                  onChange={(e) => setSelectedFormaPago(e.target.value)}
+                  value={selectedTipoCambio}
+                  onChange={(e) => setSelectedTipoCambio(e.target.value)}
                   className="p-1 border border-gray-300 rounded focus:outline-none mr-2 ml-2 w-56 mb-1 text-sm"
                   placeholder="Selecciona el proveedor"
                 >
-                  {formasPago.map((tipo) => (
+                  {tiposCambio.map((tipo) => (
                     <option key={tipo.id} value={tipo.id}>
                       {tipo.nombre}
                     </option>
                   ))}
                 </select>
                 <h1 className="text-sm font-semibold px-2 mt-2 mb-1">
-                  Responsable
-                </h1>
-                <select
-                  value={selectedResponsable}
-                  onChange={(e) => setSelectedResponsable(e.target.value)}
-                  className="p-1 border border-gray-300 rounded focus:outline-none mr-2 ml-2 w-56 mb-1 text-sm"
-                  placeholder="Responsable"
-                >
-                  {responsables.map((tipo) => (
-                    <option key={tipo.id} value={tipo.id}>
-                      {tipo.nombre}
-                    </option>
-                  ))}
-                </select>
-                <h1 className="text-sm font-semibold px-2 mt-2 mb-1">
-                  Nombre Cliente
+                  % de cambio
                 </h1>
                 <input
-                  value={nombreCliente}
-                  onChange={(e) => setNombreCliente(e.target.value)}
-                  placeholder="Cliente"
+                  value={porcentajeCambio}
+                  onChange={(e) => setPorcentaje(e.target.value)}
+                  placeholder="%"
                   className="p-1 border border-gray-300 rounded focus:outline-none mr-2 ml-2 w-56 mb-1 text-sm"
+                  type="number"
                 />
                 <h1 className="text-sm font-semibold px-2 mt-2 mb-1">
-                  Fecha de Compra
+                  Fecha de Cambio
                 </h1>
                 <DatePicker
                   selected={selectedFecha}
@@ -325,22 +280,33 @@ const RegistrarVenta = () => {
                   placeholderText="Seleccionar fecha"
                   className="p-1 border border-gray-300 rounded focus:outline-none mr-2 ml-2 w-56 mb-4 text-sm"
                 />
+
+                <button
+                  onClick={() => calcularNuevoPrecio()}
+                  className="bg-[#7BBBB7] hover:bg-[#c3eeeb] text-black font-bold px-10 py-2 rounded mt-2 mx-12 mb-2 items-center"
+                >
+                  Calcular
+                </button>
+                <h1 className="text-xs font-semibold p-2 my-1 text-center">
+                  Cuando presiones en calcular veras el nuevo precio en cada
+                  producto.
+                </h1>
               </div>
             </div>
           </div>
         </div>
         <div className="flex justify-center mt-4">
           <Link
-            to="/consultar-compras"
+            to="/principal"
             className="p-2 bg-slate-700 text-white font-bold rounded hover:bg-slate-400 focus:outline-none w-44 text-center mr-2"
           >
             Cancelar
           </Link>
           <button
-            onClick={handleRegistroVenta}
+            onClick={handleRegistroCambio}
             className="bg-[#7BBBB7] hover:bg-[#c3eeeb] text-black font-bold px-4 py-2 rounded ml-2"
           >
-            Registrar Venta
+            Registrar Cambio
           </button>
           {/* Componente de contenedor de notificaciones */}
           <ToastContainer position="top-right" autoClose={3000} />
@@ -350,4 +316,4 @@ const RegistrarVenta = () => {
   );
 };
 
-export default RegistrarVenta;
+export default RegistrarCambioMasivo;

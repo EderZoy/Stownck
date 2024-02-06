@@ -14,5 +14,8 @@ router.get("/producto/codigo/:codigo", ProductoController.getProductoByCodigo);
 router.get("/productos", ProductoController.getProductos);
 router.put("/producto/updateVenta/:id", ProductoController.updateProductoVenta);
 router.put("/producto/updateProducto/:id", ProductoController.updateProducto);
-
+router.put(
+  "/producto/updateProductoCambio/:id",
+  ProductoController.updateProductoCambio
+);
 module.exports = router;

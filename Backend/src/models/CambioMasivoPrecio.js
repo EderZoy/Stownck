@@ -12,7 +12,7 @@ const CambioMasivoPrecio = sequelize.define("CambioMasivoPrecio", {
     allowNull: false,
   },
   tipoCambio: {
-    type: DataTypes.BOOLEAN,
+    type: DataTypes.INTEGER,
     allowNull: false,
   },
 });
